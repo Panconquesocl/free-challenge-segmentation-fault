@@ -1,0 +1,37 @@
+.notes-nav-container{
+  background-color: blue;
+  overflow-x: scroll;
+  height: 30vh;
+}
+.notes-navigation-items{
+  /* margin: 0px 0px 0px 0px ; */
+  height: 60%;
+  display:inline-flex;
+  flex-direction: row;
+  overflow-x: scroll; 
+}
+.nav-note{
+  display: inline-block;
+  margin: 1px 1px 1px 1px;
+  width: 30vw;
+  border-radius: 5%;
+  border-color: black;
+  background-color: beige;
+  text-align: center;
+}
+#current-note{
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+  flex-direction: column;
+}
+.note-area{
+  position: relative;
+}
+#current-note-text{
+  width: 20vw;
+  height: 40vh;
+  margin: 10px;
+}
