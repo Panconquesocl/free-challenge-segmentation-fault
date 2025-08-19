@@ -1,0 +1,163 @@
+import React, { useEffect, useRef, useState } from "react";
+import chicken from "../assets/chicken-walking.gif";
+import "./Chicken.css";
+
+export default function ChickenCursor() {
+  const mainCursor = useRef(null);
+  const [extraChickens, setExtraChickens] = useState([]);
+
+  const positionRef = useRef({
+    mouseX: 0,
+    mouseY: 0,
+    chickenX: 0,
+    chickenY: 0,
+    facing: "right",
+  });
+
+  const lastSpawnRef = useRef(0);
+  const cooldown = 100;
+  const [isActive, setIsActive] = useState(true); // toggle para activar/desactivar pollos
+
+  useEffect(() => {
+    // if (!isActive) {return};
+    const handleMouseMove = (event) => {
+      positionRef.current.mouseX = event.clientX - 30;
+      positionRef.current.mouseY = event.clientY - 70;
+    };
+
+    const handleClick = () => {
+      setExtraChickens((prev) =>
+        prev.map((ch) => ({
+          ...ch,
+          isExploding: true,
+          explodeX: (Math.random() - 0.5) * 20, // velocidad x
+          explodeY: (Math.random() - 0.5) * 20, // velocidad y
+        }))
+      );
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("click", handleClick);
+    document.addEventListener("keydown", handleClick);
+    const animate = () => {
+      const { mouseX, mouseY, chickenX, chickenY } = positionRef.current;
+      const speed = 0.04;
+      const maxTilt = 30;
+
+      // pollo principal
+      positionRef.current.chickenX += (mouseX - chickenX) * speed;
+      positionRef.current.chickenY += (mouseY - chickenY) * speed;
+
+      const dx = mouseX - positionRef.current.chickenX;
+      const dy = mouseY - positionRef.current.chickenY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 10 && Date.now() - lastSpawnRef.current > cooldown) {
+        const randX = Math.random() * window.innerWidth;
+        const randY = Math.random() * window.innerHeight;
+        setExtraChickens((prev) => [
+          ...prev,
+          {
+            id: Date.now() + Math.random(),
+            x: randX,
+            y: randY,
+            facing: "right",
+            angle: 0,
+            isExploding: false,
+            explodeX: 0,
+            explodeY: 0,
+          },
+        ]);
+        lastSpawnRef.current = Date.now();
+      }
+
+      const angleRad = Math.atan2(dy, dx);
+      let angleDeg = (angleRad * 180) / Math.PI;
+      if (angleDeg > maxTilt) angleDeg = maxTilt;
+      if (angleDeg < -maxTilt) angleDeg = -maxTilt;
+      positionRef.current.facing = mouseX < chickenX ? "left" : "right";
+
+      if (mainCursor.current) {
+        mainCursor.current.style.transform = `
+          translate3d(${positionRef.current.chickenX}px, ${positionRef.current.chickenY}px, 0)
+          rotate(${angleDeg}deg)
+          scaleX(${positionRef.current.facing === "right" ? 1 : -1})
+        `;
+      }
+
+      // pollos extra
+      setExtraChickens((prev) =>
+        prev.map((ch) => {
+          let newX = ch.x;
+          let newY = ch.y;
+          let angle = ch.angle || 0;
+          let facing = ch.facing;
+          let explodeX = ch.explodeX || 0;
+          let explodeY = ch.explodeY || 0;
+
+          if (ch.isExploding) {
+            newX += explodeX;
+            newY += explodeY;
+
+            // rebote con bordes
+            if (newX < 0 || newX > window.innerWidth - 50) explodeX *= -1;
+            if (newY < 0 || newY > window.innerHeight - 50) explodeY *= -1;
+
+            return { ...ch, x: newX, y: newY, explodeX, explodeY, angle, facing };
+          } else {
+            // movimiento normal hacia el mouse
+            const dx = mouseX - newX;
+            const dy = mouseY - newY;
+            newX += dx * speed;
+            newY += dy * speed;
+
+            const angleRad = Math.atan2(dy, dx);
+            angle = (angleRad * 180) / Math.PI;
+            if (angle > maxTilt) angle = maxTilt;
+            if (angle < -maxTilt) angle = -maxTilt;
+            facing = mouseX < newX ? "left" : "right";
+
+            return { ...ch, x: newX, y: newY, angle, facing };
+          }
+        })
+      );
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  return (
+    <div>
+      <img
+        className="main-cursor"
+        src={chicken}
+        alt="Chicken"
+        ref={mainCursor}
+      />
+      {extraChickens.map((ch) => (
+        <img
+          key={ch.id}
+          src={chicken}
+          alt="Chicken"
+          className="extra-chicken"
+          style={{
+            position: "absolute",
+            left: ch.x,
+            top: ch.y,
+            transform: `rotate(${ch.angle || 0}deg) scaleX(${
+              ch.facing === "right" ? 1 : -1
+            })`,
+            transition: "transform 0.1s linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,31 @@
+.popUp{
+    height: auto;
+}
+.popUp button{
+    position: absolute;
+    left: 90%;
+    top: 0%;
+}
+
+.popUp {
+    border: 2px solid black;
+    background: white;
+    padding: 5px;
+    z-index: 9999;
+    animation: shake 0.4s infinite;
+  }
+  
+  .popUp img {
+    width: 250px;
+    height: auto;
+  }
+  
+  /* Animación tipo virus windows 98/2000 */
+  @keyframes shake {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-3px, 2px) rotate(-2deg); }
+    40% { transform: translate(3px, -2px) rotate(2deg); }
+    60% { transform: translate(-2px, -1px) rotate(-1deg); }
+    80% { transform: translate(2px, 3px) rotate(1deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }

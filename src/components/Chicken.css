@@ -1,0 +1,26 @@
+.main-cursor{
+  z-index: 10000;
+  pointer-events: none;
+  /* overflow: hidden; */
+  transform: translate3d(0, 0, 0);
+  position: fixed;
+}
+
+.main-cursor {
+  /* mix-blend-mode: difference; */
+    width: 40px;
+    height: 40px;
+    /* background: white; */
+    /* border-radius: 50%; */
+}
+
+.extra-chicken{
+    z-index: 10000;
+    pointer-events: none;
+    /* overflow: hidden; */
+    transform: translate3d(0, 0, 0);
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    
+}
