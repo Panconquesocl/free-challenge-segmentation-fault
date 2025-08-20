@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import chicken from "../assets/chicken-walking.gif";
 import "./Chicken.css";
 
-export default function ChickenCursor() {
+export default function ChickenCursor({chickenImg}) {
   const mainCursor = useRef(null);
   const [extraChickens, setExtraChickens] = useState([]);
 
@@ -139,18 +138,21 @@ export default function ChickenCursor() {
     };
   }, []);
 
+  
+
+
   return (
     <div>
       <img
         className="main-cursor"
-        src={chicken}
+        src={chickenImg}
         alt="Chicken"
         ref={mainCursor}
       />
       {extraChickens.map((ch) => (
         <img
           key={ch.id}
-          src={chicken}
+          src={chickenImg}
           alt="Chicken"
           className="extra-chicken"
           style={{
