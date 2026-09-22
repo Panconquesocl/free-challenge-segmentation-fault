@@ -20,7 +20,7 @@ Tu objetivo será crear una Interfaz Grafica absurdamente incomoda, frustrante y
 
 ## Entrega ✅
 - Este repositorio será revisado por los jueces al termino de la competencia: *Martes 19 Agosto - 23:59*
-- Link Deploy = [Remplazar por el link donde tenga hosteada su UI]
+- Link Deploy = https://panconquesocl.github.io/free-challenge-segmentation-fault/
 
 ---
 
